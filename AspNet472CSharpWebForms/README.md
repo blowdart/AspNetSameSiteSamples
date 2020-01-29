@@ -62,7 +62,7 @@ behavior depending on browser capability.
 If you run the sample project please load your browser debugger on the initial page and use it to view the cookie collection for the site.
 To do so in Edge and Chrome press `F12` then select the `Application` tab and click the site URL under the `Cookies` option in the `Storage` section.
 
-![Browser Debugger Cookie List](browserDebugger.jpg)
+![Browser Debugger Cookie List](BrowserDebugger.jpg)
 
 You can see from the image above that the cookie created by the sample when you click the "Create Cookies" button has a SameSite attribute value of `Lax`,
 matching the value set in the [sample code](#sampleCode).
@@ -73,9 +73,9 @@ matching the value set in the [sample code](#sampleCode).
 are returned to the client machine. In the sample we wire up the event to a static method which checks whether the browser supports the new sameSite changes,
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
-See [global.asax](AspNet472CSharpWebForms\global.asax.cs) for an example of hooking up the event,
-[SameSiteCookieRewriter.cs](AspNet472CSharpWebForms\SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute and
-[SameSiteSupport.cs](..\SameSiteSupport.cs) for an example of user agent sniffing for incompatible browser agents.
+See [global.asax](AspNet472CSharpWebForms/global.asax.cs) for an example of hooking up the event,
+[SameSiteCookieRewriter.cs](AspNet472CSharpWebForms/SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute and
+[SameSiteSupport.cs](../SameSiteSupport.cs) for an example of user agent sniffing for incompatible browser agents.
 
 
 ```c#

@@ -41,7 +41,7 @@ This should not have any side effects in your code, the `Path` property is a hin
 If you run the sample project please load your browser debugger on the initial page and use it to view the cookie collection for the site.
 To do so in Edge and Chrome press `F12` then select the `Application` tab and click the site URL under the `Cookies` option in the `Storage` section.
 
-![Browser Debugger Cookie List](browserDebugger.jpg)
+![Browser Debugger Cookie List](BrowserDebugger.jpg)
 
 You can see from the image above that the cookie created by the sample when you click the "Create SameSite Cookie" button has a SameSite attribute value of `Lax`,
 matching the value set in the [sample code](#sampleCode).
