@@ -76,6 +76,7 @@ and if not, changes the cookies to not emit the attribute if the new `None` valu
 See [global.asax](global.asax.cs) for an example of hooking up the event and
 [SameSiteCookieRewriter.cs](SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute.
 
+
 ```c#
 public static void FilterSameSiteNoneForIncompatibleUserAgents(object sender)
 {
