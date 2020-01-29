@@ -52,10 +52,8 @@ matching the value set in the [sample code](#sampleCode).
 are returned to the client machine. In the sample we wire up the event to a static method which checks whether the browser supports the new sameSite changes,
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
-See [global.asax](AspNet45CSharpWebForms/global.asax.cs) for an example of hooking up the event, 
-[SameSiteCookieRewriter.cs](AspNet45CSharpWebForms/SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute and
-[SameSiteSupport.cs](../SameSiteSupport.cs) for an example of user agent sniffing for incompatible browser agents.
-
+See [global.asax](global.asax.cs) for an example of hooking up the event and
+[SameSiteCookieRewriter.cs](SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute.
 ## More Information
 
 [Chrome Updates](https://www.chromium.org/updates/same-site)
