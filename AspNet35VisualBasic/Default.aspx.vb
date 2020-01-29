@@ -1,4 +1,7 @@
-﻿Imports System.Globalization
+﻿' Copyright (c) .NET Foundation. All rights reserved.
+' Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+Imports System.Globalization
 
 Public Class _Default
     Inherits System.Web.UI.Page

@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 		SameSiteSupport.cs = SameSiteSupport.cs
+		SampleSiteSupport.vb = SampleSiteSupport.vb
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet472CSharpWebForms", "AspNet472CSharpWebForms\AspNet472CSharpWebForms.csproj", "{B31A2C1E-5B08-4786-86B0-B860AC96D79A}"
