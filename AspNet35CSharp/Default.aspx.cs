@@ -50,7 +50,7 @@ namespace AspNet35CSharp
                 Response.Cookies.Add(sameSiteCookie);
             }
 
-            RenderCookieDetails();
+            Response.Redirect("~/Default.aspx");
         }
 
         private void RenderCookieDetails()

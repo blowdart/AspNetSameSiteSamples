@@ -40,7 +40,7 @@ Public Class _Default
             Response.Cookies.Add(sameSiteCookie)
         End If
 
-        RenderCookieDetails()
+        Response.Redirect("~/default.aspx")
     End Sub
 
     Private Sub RenderCookieDetails()

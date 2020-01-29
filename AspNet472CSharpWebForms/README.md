@@ -69,9 +69,14 @@ matching the value set in the [sample code](#sampleCode).
 
 ## <a name="interception"></a>Intercepting cookies you do not control
 
-.NET 4.5.2 introduced a new event for intercepting requests, `Application_PreSendRequestHeaders()`. This can be used to intercept cookies before they
+.NET 4.5.2 introduced a new event for intercepting the writing of headers, `Response.AddOnSendingHeaders`. This can be used to intercept cookies before they
 are returned to the client machine. In the sample we wire up the event to a static method which checks whether the browser supports the new sameSite changes,
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
+
+See [global.asax](AspNet472CSharpWebForms\global.asax.cs) for an example of hooking up the event,
+[SameSiteCookieRewriter.cs](AspNet472CSharpWebForms\SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute and
+[SameSiteSupport.cs](..\SameSiteSupport.cs) for an example of user agent sniffing for incompatible browser agents.
+
 
 ```c#
 public static void FilterSameSiteNoneForIncompatibleUserAgents(object sender)
@@ -135,3 +140,5 @@ public static void AdjustSpecificCookieSettings()
 [Chrome Updates](https://www.chromium.org/updates/same-site)
 
 [ASP.NET Documentation](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite)
+
+[.NET SameSite Patches](https://docs.microsoft.com/en-us/aspnet/samesite/kbs-samesite)
