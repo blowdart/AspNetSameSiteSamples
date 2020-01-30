@@ -61,6 +61,30 @@ We *strongly* advise you target .NET 4.7.2 or greater if you are not already doi
 
 ## Testing
 
+To test you will need to [download](https://www.google.com/chrome/) a version of Chrome that supports their new attribute.
+At the time of writing this is Chrome 79, which needs a flag (`chrome://flags/#same-site-by-default-cookies`) enabled 
+to use the new behavior. You should also enable (`chrome://flags/#cookies-without-same-site-must-be-secure`) to test 
+the upcoming behavior for cookies which have no sameSite attribute enabled.
+Chrome 80 is on target to make the switch to treat cookies without the attribute as SameSite=Lax, 
+albeit with a timed grace period for certain requests. To disable the timed grace 
+period Chrome 80 can be launched with the command line argument `--enable-features=SameSiteDefaultChecksMethodRigorously`.
+
+Chrome 79 has warning messages in the browser console (f12 to open) about missing sameSite attributes.
+
+You will also need a browser that does not support the upcoming switch, for example (Chromium v74)[https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Win_x64/638880/].
+If you're not using a 64bit version of Windows you can use the [OmahaProxy viewer](https://omahaproxy.appspot.com/) 
+to look up which Chromium branch corresponds to Chrome 74 (v74.0.3729.108) using the 
+[instructions provided by Chromium](https://www.chromium.org/getting-involved/download-chromium).
+
+Then it's a matter of starting both browsers and going through your scenarios that involve cookies. These scenarios
+typically involve
+
+* Login forms
+* External login mechanisms such as Facebook, Azure AD, OAuth and OIDC
+* Pages that accept requests from other sites
+* Pages in your application designed to be embedded in iframes
+
+You should check that cookies are created, persisted and deleted correctly in your application.
 
 ## Sample list
 
@@ -68,7 +92,7 @@ This solution contains examples of what is possible in
 
 * .NET 4.7.2 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
 * .NET 4.5 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
-* .NET 3.5 - [C#](AspNet35CSharp/README.md)
+* .NET 3.5 - [C#](AspNet35CSharp/README.md) [VB](AspNet35VisualBasic/README.md)
 
 **More to come**
 
