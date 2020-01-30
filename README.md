@@ -59,6 +59,11 @@ How you wire up the detection varies according the version of .NET and the web f
 
 We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, it contains APIs which make supporting sameSite easier.
 
+## Testing
+
+
+## Sample list
+
 This solution contains examples of what is possible in
 
 * .NET 4.7.2 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
@@ -66,3 +71,11 @@ This solution contains examples of what is possible in
 * .NET 3.5 - [C#](AspNet35CSharp/README.md)
 
 **More to come**
+
+## More Information
+
+[Chrome Updates](https://www.chromium.org/updates/same-site)
+
+[ASP.NET Documentation](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite)
+
+[.NET SameSite Patches](https://docs.microsoft.com/en-us/aspnet/samesite/kbs-samesite)

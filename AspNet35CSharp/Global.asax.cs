@@ -11,9 +11,10 @@ namespace AspNet35CSharp
             // Set SessionState cookie to SameSite=None
             if (sender is HttpApplication app)
             {
-                if (SameSite.BrowserDetection.DisallowsSameSiteNone(app.Request.UserAgent))
+                if (SameSite.BrowserDetection.AllowsSameSiteNone(app.Request.UserAgent))
                 {
                     SetSameSite(app.Response.Cookies["ASP.NET_SessionId"], "None");
+                    SetSameSite(app.Response.Cookies[".ASPXAUTH"], "None");
                 }
             }
         }

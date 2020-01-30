@@ -48,10 +48,18 @@ matching the value set in the [sample code](#sampleCode).
 
 ## Intercepting cookies you do not control
 
-In .NET 3.5 you can intercept the request/response pipeline to adjust a cookie setting before it is written back to the client. The sample code creates a session 
-cookie, which in .NET 3.5 is unaware of the sameSite attribute so the [global.asx](Global.asx.cs) `Application_PostAcquireRequestState` event can be 
-used to intercept the response. The sample adds both the sameSite attribute and adjusts the `Secure` property to the session cookie to match the new changes made 
-in Chrome. Your website must be running on HTTPS for the secure flag to work as expected.
+In .NET 3.5 there is no reliable way to intercept responses outside of an unmanaged IIS module. While you may be tempted to use the `Application_PreSendRequestHeaders`
+global event it is [unreliable](https://docs.microsoft.com/en-us/dotnet/api/system.web.httpapplication.presendrequestheaders?view=netframework-3.5) and is unaware 
+of any modules in your ASP.NET pipeline. Attempting to use this event will cause Access Violation exceptions that will crash the process hosting your application. 
+
+However you can you can intercept the request/response pipeline to adjust the session and forms authentication cookies before it is written back to the client. The sample code creates a session 
+cookie and a forms authentication cookie, which in .NET 3.5 are unaware of the sameSite attribute so the 
+[global.asx](Global.asx.cs) `Application_PostAcquireRequestState` event is then used to intercept the response. 
+The sample adds both the sameSite attribute and adjusts the `Secure` property to the session and forms authentication 
+cookies to match the new changes made in Chrome. Your website must be running on HTTPS for the secure flag to work as 
+expected. This technique reliably works for the session and forms authentication cookies due to where the are 
+created in the asp.net pipeline, it may not work for cookies that are created outside of typical location, if
+you have other cookies you wish to adjust you will need to experiment to see if this technique works for them.
 
 ```c#
 public class Global : System.Web.HttpApplication
@@ -63,6 +71,7 @@ public class Global : System.Web.HttpApplication
         {
             if (SameSite.BrowserDetection.DisallowsSameSiteNone(app.Request.UserAgent))
             {
+                SetSameSite(app.Response.Cookies[".ASPXAUTH"], "None");
                 SetSameSite(app.Response.Cookies["ASP.NET_SessionId"], "None");
             }
         }

@@ -52,8 +52,52 @@ In .NET 3.5 there is no reliable way to intercept responses outside of an unmana
 global event it is [unreliable](https://docs.microsoft.com/en-us/dotnet/api/system.web.httpapplication.presendrequestheaders?view=netframework-3.5) and is unaware 
 of any modules in your ASP.NET pipeline. Attempting to use this event will cause Access Violation exceptions that will crash the process hosting your application. 
 
-In order to intercept cookies outside of your control, such as authentication or session cookies you must upgrade your application to .NET 4.5 or greater. 
-Updating to .NET 4.7.2 or later will give you access to built-in `SameSite` property on the `Cookie` class.
+However you can you can intercept the request/response pipeline to adjust the session and forms authentication cookies before it is written back to the client. The sample code creates a session 
+cookie and a forms authentication cookie, which in .NET 3.5 are unaware of the sameSite attribute so the 
+[global.asx](Global.asx.vb) `Application_PostAcquireRequestState` event is then used to intercept the response. 
+The sample adds both the sameSite attribute and adjusts the `Secure` property to the session and forms authentication 
+cookies to match the new changes made in Chrome. Your website must be running on HTTPS for the secure flag to work as 
+expected. This technique reliably works for the session and forms authentication cookies due to where the are 
+created in the asp.net pipeline, it may not work for cookies that are created outside of typical location, if
+you have other cookies you wish to adjust you will need to experiment to see if this technique works for them.
+
+```vb
+Sub Application_PostAcquireRequestState(ByVal sender As Object, ByVal e As EventArgs)
+    If TypeOf sender Is HttpApplication Then
+        Dim app As HttpApplication = sender
+        If (SameSite.BrowserDetection.AllowsSameSiteNone(app.Request.UserAgent)) Then
+            SetSameSite(app.Response.Cookies("ASP.NET_SessionId"), "None")
+            SetSameSite(app.Response.Cookies(".ASPXAUTH"), "None")
+        End If
+    End If
+End Sub
+
+Private Sub SetSameSite(ByVal c As HttpCookie, ByVal sameSiteValue As String)
+    Const sameSiteAttribute As String = "sameSite="
+
+    If c Is Nothing Then
+        Return
+    End If
+
+    If c.Path.Contains(sameSiteAttribute) Then
+        Dim pathParts As String() = c.Path.Split(New Char() {";"c})
+
+        For i As Integer = 0 To pathParts.Length - 1
+            If pathParts(i).Trim().StartsWith(sameSiteAttribute, StringComparison.InvariantCulture) Then
+                pathParts(i) = " " & sameSiteAttribute & " " & sameSiteValue
+            End If
+        Next
+
+        c.Path = String.Join(";", pathParts)
+    Else
+        c.Path += "; " & sameSiteAttribute & sameSiteValue
+    End If
+
+    If String.Compare("None", sameSiteValue, False, CultureInfo.InvariantCulture) = 0 Then
+        c.Secure = True
+    End If
+End Sub
+```
 
 ## More Information
 

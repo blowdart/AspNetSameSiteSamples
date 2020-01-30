@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -65,7 +66,7 @@ namespace AspNet472CSharpWebForms
                 CookieList.Rows.RemoveAt(i);
             }
 
-            foreach (var cookieName in Request.Cookies.AllKeys)
+            foreach (var cookieName in Request.Cookies.AllKeys.Distinct() 080)
             {
                 var cookie = Request.Cookies[cookieName];
 

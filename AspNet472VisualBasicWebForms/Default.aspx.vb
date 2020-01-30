@@ -53,36 +53,39 @@ Public Class _Default
     End Sub
 
     Private Sub RenderCookieDetails()
-        For i = 1 To CookieList.Rows.Count
-            CookieList.Rows.RemoveAt(i)
-        Next
-
-        For Each cookieName As String In Request.Cookies.AllKeys
-
-                Dim cookie As HttpCookie
-                cookie = Request.Cookies(cookieName)
-
-                Dim TableRow As New TableRow
-                Dim nameCell As New TableCell
-                Dim valueCell As New TableCell
-                Dim secureCell As New TableCell
-                Dim domainCell As New TableCell
-                Dim pathCell As New TableCell
-
-                nameCell.Text = HttpUtility.HtmlEncode(cookie.Name)
-                valueCell.Text = HttpUtility.HtmlEncode(cookie.Value)
-                secureCell.Text = cookie.Secure.ToString(CultureInfo.InvariantCulture)
-                domainCell.Text = HttpUtility.HtmlEncode(cookie.Domain)
-                pathCell.Text = HttpUtility.HtmlEncode(cookie.Path)
-
-                TableRow.Cells.Add(nameCell)
-                TableRow.Cells.Add(valueCell)
-                TableRow.Cells.Add(secureCell)
-                TableRow.Cells.Add(domainCell)
-                TableRow.Cells.Add(pathCell)
-
-                CookieList.Rows.Add(TableRow)
+        If CookieList.Rows.Count > 1 Then
+            For i = 1 To CookieList.Rows.Count
+                CookieList.Rows.RemoveAt(i)
             Next
+        End If
+
+
+        For Each cookieName As String In Request.Cookies.AllKeys.Distinct()
+
+            Dim cookie As HttpCookie
+            cookie = Request.Cookies(cookieName)
+
+            Dim TableRow As New TableRow
+            Dim nameCell As New TableCell
+            Dim valueCell As New TableCell
+            Dim secureCell As New TableCell
+            Dim domainCell As New TableCell
+            Dim pathCell As New TableCell
+
+            nameCell.Text = HttpUtility.HtmlEncode(cookie.Name)
+            valueCell.Text = HttpUtility.HtmlEncode(cookie.Value)
+            secureCell.Text = cookie.Secure.ToString(CultureInfo.InvariantCulture)
+            domainCell.Text = HttpUtility.HtmlEncode(cookie.Domain)
+            pathCell.Text = HttpUtility.HtmlEncode(cookie.Path)
+
+            TableRow.Cells.Add(nameCell)
+            TableRow.Cells.Add(valueCell)
+            TableRow.Cells.Add(secureCell)
+            TableRow.Cells.Add(domainCell)
+            TableRow.Cells.Add(pathCell)
+
+            CookieList.Rows.Add(TableRow)
+        Next
     End Sub
 
 End Class

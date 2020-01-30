@@ -43,11 +43,21 @@ Public Class _Default
             Response.Cookies.Add(sameSiteCookie)
         End If
 
+        Session("sample") = "sample"
+
         Response.Redirect("~/default.aspx")
     End Sub
 
     Private Sub RenderCookieDetails()
-        For Each cookieName As String In Request.Cookies.AllKeys
+
+        If CookieList.Rows.Count > 1 Then
+            For i = 1 To CookieList.Rows.Count
+                CookieList.Rows.RemoveAt(i)
+            Next
+        End If
+
+
+        For Each cookieName As String In Request.Cookies.AllKeys.Distinct()
 
             Dim cookie As HttpCookie
             cookie = Request.Cookies(cookieName)

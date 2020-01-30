@@ -3,7 +3,9 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -53,12 +55,24 @@ namespace AspNet35CSharp
                 Response.Cookies.Add(sameSiteCookie);
             }
 
+            // Create a session variable to get a session cookie created.
+            Session["sample"] = "sample";
+
+            // And fake a login to create a membership cookie with forms authentication.
+            // Note we're not setting any sameSite attributes here.
+            FormsAuthentication.SetAuthCookie("username", false);
+
             Response.Redirect("~/Default.aspx");
         }
 
         private void RenderCookieDetails()
         {
-            foreach (var cookieName in Request.Cookies.AllKeys)
+            for (int i = 1; i < CookieList.Rows.Count; i++)
+            {
+                CookieList.Rows.RemoveAt(i);
+            }
+
+            foreach (var cookieName in Request.Cookies.AllKeys.Distinct())
             {
                 var cookie = Request.Cookies[cookieName];
 
