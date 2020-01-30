@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -48,32 +49,12 @@ namespace AspNet45CSharpWebForms
                 Response.Cookies.Add(sameSiteCookie);
             }
 
-            // Create a pretend authentication cookie which does not have the SameSite attribute on it.
-            const string SampleAuthCookie = ".ASPXAUTH";
-            if (Request.Cookies[SampleAuthCookie] == null)
-            {
-                // Create the cookie
-                HttpCookie sameSiteCookie = new HttpCookie(SampleAuthCookie);
+            // Create a session variable to get a session cookie created.
+            Session["sample"] = "sample";
 
-                // Set a value for the cookie
-                sameSiteCookie.Value = "authentication";
-
-                // Set the secure flag, which Chrome's changes will require for SameSite none.
-                // Note this will also require you to be running on HTTPS
-                sameSiteCookie.Secure = true;
-
-                // Set the cookie to HTTP only which is good practice unless you really do need
-                // to access it client side in scripts.
-                sameSiteCookie.HttpOnly = true;
-
-                // Add the SameSite attribute
-                // As .NET 4.5 does not support SameSite as a property you
-                // must append the attribute and value to the cookie path property
-                sameSiteCookie.Path += "; sameSite=None";
-
-                // Add the cookie to the response cookie collection
-                Response.Cookies.Add(sameSiteCookie);
-            }
+            // And fake a login to create a membership cookie with forms authentication.
+            // Note we're not setting any sameSite attributes here.
+            FormsAuthentication.SetAuthCookie("username", false);
 
             Response.Redirect("Default.aspx");
         }

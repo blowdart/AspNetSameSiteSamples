@@ -1,6 +1,8 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -51,5 +53,53 @@ namespace AspNet45CSharpWebForms
                 }
             }
         }
+
+        public static void SetSameSiteAttribute(object sender, string cookieName, string sameSiteValue)
+        {
+            const string sameSiteAttribute = "sameSite=";
+
+            HttpApplication application = sender as HttpApplication;
+            if (application == null)
+            {
+                return;
+            }
+
+            HttpCookie c = application.Response.Cookies[cookieName];
+            if (c == null)
+            {
+                return;
+            }
+
+            // Cookie already has a SameSite value. Replace it.
+            if (c.Path.Contains(sameSiteAttribute))
+            {
+                // Find the SameSite value
+                string[] pathParts = c.Path.Split(new char[] { ';' });
+                for (int i = 0; i < pathParts.Length; i++)
+                {
+                    // Update the SameSite value
+                    if (pathParts[i].Trim().StartsWith(sameSiteAttribute, StringComparison.InvariantCulture))
+                    {
+                        pathParts[i] = " " + sameSiteAttribute + " " + sameSiteValue;
+                    }
+                }
+
+                // Replace the path
+                c.Path = string.Join(";", pathParts);
+            }
+            else
+            {
+                // Adding a value where it didn't exist before is easy.
+                c.Path += "; " + sameSiteAttribute + sameSiteValue;
+            }
+
+            // If we set the sameSite attribute to none the new Chrome changes also need it to be marked as secure.
+            // Your website must be running on HTTPS for the Secure flag to work as expected.
+            if (string.Compare("None", sameSiteValue, false, CultureInfo.InvariantCulture) == 0)
+            {
+                c.Secure = true;
+            }
+        }
+
     }
 }

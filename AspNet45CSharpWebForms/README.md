@@ -33,7 +33,7 @@ sameSiteCookie.Path += "; sameSite=Lax";
 Response.Cookies.Add(sameSiteCookie);
 ```
 
-If you examine the `Path` property on an inbound cookie written using this method you will see the SameSite attribute appended to it.
+If you examine the `Path` property on an inbound cookie written using this method you will see the sameSite attribute appended to it.
 This should not have any side effects in your code, the `Path` property is a hint for browsers, not for use server side.
 
 ### Running the sample
@@ -53,7 +53,10 @@ are returned to the client machine. In the sample we wire up the event to a stat
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
 See [global.asax](global.asax.cs) for an example of hooking up the event and
-[SameSiteCookieRewriter.cs](SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute.
+[SameSiteCookieRewriter.cs](SameSiteCookieRewriter.cs) for code to handling the event and 
+adjusting the cookie `sameSite` attribute and to also enable you to set the sameSite attribute on the forms authentication
+cookie and session cookie.
+
 
 ## More Information
 
