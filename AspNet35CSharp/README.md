@@ -2,12 +2,12 @@
 ## .NET Framework 3.5
 ### Summary
 
-.NET Framework 3.5 has no built-in support for the [SameSite](https://www.owasp.org/index.php/SameSite) attribute, however it can be added to a cookie by 
+.NET Framework 3.5 has no built-in support for the [sameSite](https://www.owasp.org/index.php/SameSite) attribute, however it can be added to a cookie by 
 manually appending the attribute and value to the `Path` property on a `Cookie` instance.
 
-### <a name="sampleCode"></a>Writing the SameSite attribute
+### <a name="sampleCode"></a>Writing the sameSite attribute
 
-Following is an example of how to write a SameSite attribute on a cookie;
+Following is an example of how to write a sameSite attribute on a cookie;
 
 ```c#
 // Create the cookie
@@ -33,7 +33,7 @@ sameSiteCookie.Path += "; sameSite=Lax";
 Response.Cookies.Add(sameSiteCookie);
 ```
 
-If you examine the `Path` property on an inbound cookie written using this method you will see the SameSite attribute appended to it.
+If you examine the `Path` property on an inbound cookie written using this method you will see the sameSite attribute appended to it.
 This should not have any side effects in your code, the `Path` property is a hint for browsers, not for use server side.
 
 ### Running the sample
@@ -48,12 +48,67 @@ matching the value set in the [sample code](#sampleCode).
 
 ## Intercepting cookies you do not control
 
-In .NET 3.5 there is no reliable way to intercept responses outside of an unmanaged IIS module. While you may be tempted to use the `Application_PreSendRequestHeaders`
-global event it is [unreliable](https://docs.microsoft.com/en-us/dotnet/api/system.web.httpapplication.presendrequestheaders?view=netframework-3.5) and is unaware 
-of any modules in your ASP.NET pipeline. Attempting to use this event will cause Access Violation exceptions that will crash the process hosting your application. 
+In .NET 3.5 you can intercept the request/response pipeline to adjust a cookie setting before it is written back to the client. The sample code creates a session 
+cookie, which in .NET 3.5 is unaware of the sameSite attribute so the [global.asx](Global.asx.cs) `Application_PostAcquireRequestState` event can be 
+used to intercept the response. The sample adds both the sameSite attribute and adjusts the `Secure` property to the session cookie to match the new changes made 
+in Chrome. Your website must be running on HTTPS for the secure flag to work as expected.
 
-In order to intercept cookies outside of your control, such as authentication or session cookies you must upgrade your application to .NET 4.5 or greater. 
-Updating to .NET 4.7.2 or later will give you access to built-in `SameSite` property on the `Cookie` class.
+```c#
+public class Global : System.Web.HttpApplication
+{
+    protected void Application_PostAcquireRequestState(object sender, EventArgs e)
+    {
+        // Set SessionState cookie to SameSite=None
+        if (sender is HttpApplication app)
+        {
+            if (SameSite.BrowserDetection.DisallowsSameSiteNone(app.Request.UserAgent))
+            {
+                SetSameSite(app.Response.Cookies["ASP.NET_SessionId"], "None");
+            }
+        }
+    }
+
+    private void SetSameSite(HttpCookie c, string sameSiteValue)
+    {
+        const string sameSiteAttribute = "sameSite=";
+
+        if (c == null)
+        {
+            return;
+        }
+
+        // Cookie already has a sameSite value. Replace it.
+        if (c.Path.Contains(sameSiteAttribute))
+        {
+            // Find the sameSite value
+            string[] pathParts = c.Path.Split(new char[] { ';' });
+            for (int i = 0; i < pathParts.Length; i++)
+            {
+                // Update the SameSite value
+                if (pathParts[i].Trim().StartsWith(sameSiteAttribute, StringComparison.InvariantCulture))
+                {
+                    pathParts[i] = " " + sameSiteAttribute + " " + sameSiteValue;
+                }
+            }
+
+            // Replace the path
+            c.Path = string.Join(";", pathParts);
+        }
+        else
+        {
+            // Adding a value where it didn't exist before is easy.
+            c.Path += "; " + sameSiteAttribute + sameSiteValue;
+        }
+
+        // If we set the sameSite attribute to none the new Chrome changes also need it to be marked as secure.
+        // Your website must be running on HTTPS for the Secure flag to work as expected.
+        if (string.Compare("None", sameSiteValue, false, CultureInfo.InvariantCulture) == 0)
+        {
+            c.Secure = true;
+        }
+    }
+}
+```
 
 ## More Information
 
