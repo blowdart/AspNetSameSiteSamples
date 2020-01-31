@@ -222,3 +222,5 @@ Update your web.config to include the following configuration settings;
 [.NET SameSite Patches](https://docs.microsoft.com/en-us/aspnet/samesite/kbs-samesite)
 
 [Azure Web Applications Same Site Information](https://azure.microsoft.com/en-us/updates/app-service-samesite-cookie-update/)
+
+[Azure ActiveDirectory Same Site Information](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-handle-samesite-cookie-changes-chrome-browser)
