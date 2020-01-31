@@ -10,23 +10,38 @@ SameSite is an IETF draft standard designed to provide some protection against c
 Originally drafted in [2016](https://tools.ietf.org/html/draft-west-first-party-cookies-07), Google proposed, then implemented an update to the standard and Chrome in 
 [2019[(https://tools.ietf.org/html/draft-west-cookie-incrementalism-00). The updated standard is not backward compatible with the previous standard, with the following being the most noticeable differences:
 
-* Cookies without SameSite header are treated as SameSite=Lax by default.
+* Cookies without sameSite attribute are treated as sameSite=Lax by default.
 * SameSite=None must be used to allow cross-site cookie use.
-* Cookies that assert SameSite=None must also be marked as Secure.
-* Applications that use iframe may experience issues with SameSite=Lax or SameSite=Strict cookies because iframes are treated as cross-site scenarios.
+* Cookies that assert sameSite=None must also be marked as Secure.
+* Applications that use iframes may experience issues with sameSite=Lax or sameSite=Strict cookies because iframes are treated as cross-site scenarios.
 
-The value SameSite=None is not allowed by the 2016 standard and causes some implementations which confirm to the original sample to treat such cookies as SameSite=Strict, which
+The value sameSite=None is not allowed by the 2016 standard and causes some implementations which confirm to the original sample to treat such cookies as SameSite=Strict, which
 will break applications which rely on the standardized behavior, including some forms of authentication like OpenID Connect (OIDC) and WS-Federation
 
-## .NET specific changes
+## .NET support for the sameSite attribute
 
-.Net 4.7.2 and 4.8 supports the 2019 draft standard for SameSite since the release of updates in December 2019. Developers are able to programmatically control the value 
-of the SameSite header using the `HttpCookie.SameSite` property. Setting the `SameSite` property to Strict, Lax, or None results in those values being written on the network 
-with the cookie. Setting it equal to (SameSiteMode)(-1) indicates that no SameSite header should be included on the network with the cookie. 
+.NET 4.7.2 and 4.8 supports the 2019 draft standard for SameSite since the release of updates in December 2019. 
+Developers are able to programmatically control the value of the SameSite header using the 
+`HttpCookie.SameSite` property. Setting the `SameSite` property to Strict, Lax, or None results in those values 
+being written on the network with the cookie. Setting it equal to (SameSiteMode)(-1) indicates that 
+no SameSite header should be included on the network with the cookie. 
+
 The HttpCookie.Secure Property, or `requireSSL` in config files, can be used to mark the cookie as Secure or not.
 
-The specific behavior change is how the `SameSite` property interprets the `None` value. Before the patch a value of `None` meant "Do not emit the attribute at all", after
-the patch it means "Emit the attribute with a value of `None`". After the patch a `SameSite` value of `(SameSiteMode)(-1)` causes the attribute not to be emitted.
+*Any version of .NET or ASP.NET before .NET 4.7.2 is unaware of the sameSite attribute. Samples for these older
+versions are provided as a courtesy, but the approaches detailed are unsupported by Microsoft.*
+
+We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, 
+it contains APIs which make supporting sameSite easier.
+
+## December patch behviour changes
+
+The specific behavior change is how the `SameSite` property interprets the `None` value. 
+Before the patch a value of `None` meant "Do not emit the attribute at all", after
+the patch it means "Emit the attribute with a value of `None`". 
+After the patch a `SameSite` value of `(SameSiteMode)(-1)` causes the attribute not to be emitted.
+
+The default SameSite value for forms authentication and session state cookies was changed from `None` to `Lax`.
 
 ## What this means to you
 
@@ -56,8 +71,6 @@ is not meant as a complete implementation, your application may see browsers tha
 for your environment.
 
 How you wire up the detection varies according the version of .NET and the web framework that you are using. 
-
-We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, it contains APIs which make supporting sameSite easier.
 
 ## Ensuring your site redirects to HTTPS
 
@@ -140,7 +153,15 @@ the version of Electron your product uses.
 
 This solution contains examples of what is possible in
 
+* .NET 4.7.2 and ASP.NET MVC 5 - [C#](AspNet472CSharpMVC5/README.md)
 * .NET 4.7.2 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
+
+*Any version of .NET or ASP.NET before .NET 4.7.2 is unaware of the sameSite attribute. Samples for these older
+versions are provided as a courtesy, but the approaches detailed are unsupported by Microsoft.*
+
+We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, 
+it contains APIs which make supporting sameSite easier.
+
 * .NET 4.5 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
 * .NET 3.5 - [C#](AspNet35CSharp/README.md) [VB](AspNet35VisualBasic/README.md)
 
