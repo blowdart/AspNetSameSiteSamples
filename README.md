@@ -193,3 +193,5 @@ it contains APIs which make supporting sameSite easier.
 [ASP.NET Documentation](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite)
 
 [.NET SameSite Patches](https://docs.microsoft.com/en-us/aspnet/samesite/kbs-samesite)
+
+[Azure Web Applications Same Site Information](https://azure.microsoft.com/en-us/updates/app-service-samesite-cookie-update/)
