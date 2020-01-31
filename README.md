@@ -168,7 +168,7 @@ Versions of Electron include older versions of Chromium. For example, the versio
 Teams is Chromium 66, which exhibits the older behavior. You must perform your own compatibility testing with 
 the version of Electron your product uses.
 
-## Sample list
+## Sample Code
 
 This solution contains examples of what is possible in
 
@@ -185,6 +185,33 @@ it contains APIs which make supporting sameSite easier.
 * .NET 3.5 - [C#](AspNet35CSharp/README.md) [VB](AspNet35VisualBasic/README.md)
 
 **More to come**
+
+## Reverting SameSite patches
+
+You can revert the updated sameSite behavior in .NET to its previous behavior where the sameSite attribute is not
+emitted for a value of 'None', and revert the authentication and session cookies to not emit the value. This should be 
+viewed as an *extremely temporary fix*, as the Chrome changes will break any external POST requests or authentication
+for users using Chrome.
+
+### Reverting .NET 4.7.2 Behavior
+
+Update your web.config to include the following configuration settings;
+
+```xml
+<configuration> 
+  <appSettings>
+    <add key="aspnet:SuppressSameSiteNone" value="true" />
+  </appSettings>
+ 
+  <system.web> 
+    <authentication> 
+      <forms cookieSameSite="None" /> 
+    </authentication> 
+    <sessionState cookieSameSite="None" /> 
+  </system.web> 
+</configuration>
+
+```
 
 ## More Information
 
