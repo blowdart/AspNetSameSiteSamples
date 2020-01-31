@@ -116,7 +116,7 @@ feature to redirect all requests to HTTPS. An example rule is as follows;
 </configuration>
 ```
 
-In on-premises installations of IIS URL Rewrite is an optional feature that may need installing.
+In on-premises installations of [IIS URL Rewrite](https://www.iis.net/downloads/microsoft/url-rewrite) is an optional feature that may need installing.
 
 ## Testing
 
