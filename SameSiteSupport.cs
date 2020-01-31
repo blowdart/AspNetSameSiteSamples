@@ -3,8 +3,8 @@
 
 namespace SameSite
 {
-	public static class BrowserDetection
-	{
+    public static class BrowserDetection
+    {
         // Same as https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/
         public static bool DisallowsSameSiteNone(string userAgent)
         {

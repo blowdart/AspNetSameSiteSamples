@@ -61,6 +61,18 @@ We *strongly* advise you target .NET 4.7.2 or greater if you are not already doi
 
 ## Testing
 
+You must test your application with the browsers you support and go through your scenarios that involve cookies. 
+These scenarios typically involve
+
+* Login forms
+* External login mechanisms such as Facebook, Azure AD, OAuth and OIDC
+* Pages that accept requests from other sites
+* Pages in your application designed to be embedded in iframes
+
+You should check that cookies are created, persisted and deleted correctly in your application.
+
+### Chrome
+
 To test you will need to [download](https://www.google.com/chrome/) a version of Chrome that supports their new attribute.
 At the time of writing this is Chrome 79, which needs a flag (`chrome://flags/#same-site-by-default-cookies`) enabled 
 to use the new behavior. You should also enable (`chrome://flags/#cookies-without-same-site-must-be-secure`) to test 
@@ -76,15 +88,26 @@ If you're not using a 64bit version of Windows you can use the [OmahaProxy viewe
 to look up which Chromium branch corresponds to Chrome 74 (v74.0.3729.108) using the 
 [instructions provided by Chromium](https://www.chromium.org/getting-involved/download-chromium).
 
-Then it's a matter of starting both browsers and going through your scenarios that involve cookies. These scenarios
-typically involve
+### Safari
 
-* Login forms
-* External login mechanisms such as Facebook, Azure AD, OAuth and OIDC
-* Pages that accept requests from other sites
-* Pages in your application designed to be embedded in iframes
+Safari 12 strictly implemented the prior draft and fails when the new None value is in a cookie. 
+Test Safari 12, Safari 13, and WebKit based OS browsers. The problem is dependent on the underlying OS version. 
+OSX Mojave (10.14) and iOS 12 are known to have compatibility problems with the new SameSite behavior. 
+Upgrading the OS to OSX Catalina (10.15) or iOS 13 fixes the problem. 
+Safari does not currently have an opt-in flag for testing the new spec behavior.
 
-You should check that cookies are created, persisted and deleted correctly in your application.
+### Firefox
+
+Firefox support for the new standard can be tested on version 68+ by opting in on the about:config page with the 
+feature flag `network.cookie.sameSite.laxByDefault`. 
+
+### Test with Edge (Legacy)
+Edge supports the old SameSite standard but doesn't have any known compatibility problems with the new standard.
+
+### Electron
+Versions of Electron include older versions of Chromium. For example, the version of Electron used by 
+Teams is Chromium 66, which exhibits the older behavior. You must perform your own compatibility testing with 
+the version of Electron your product uses. See Supporting older browsers in the following section.
 
 ## Sample list
 

@@ -66,7 +66,7 @@ namespace AspNet472CSharpWebForms
                 CookieList.Rows.RemoveAt(i);
             }
 
-            foreach (var cookieName in Request.Cookies.AllKeys.Distinct() 080)
+            foreach (var cookieName in Request.Cookies.AllKeys.Distinct())
             {
                 var cookie = Request.Cookies[cookieName];
 

@@ -5,6 +5,8 @@
 .NET Framework 4.5 has no built-in support for the [SameSite](https://www.owasp.org/index.php/SameSite) attribute, however it can be added to a cookie by 
 manually appending the attribute and value to the `Path` property on a `Cookie` instance.
 
+*This code is unsupported, and Microsoft will only support you for sameSite issues if you upgrade to .NET 4.7.2.*
+
 ### <a name="sampleCode"></a>Writing the SameSite attribute
 
 Following is an example of how to write a SameSite attribute on a cookie;
