@@ -34,6 +34,25 @@ versions are provided as a courtesy, but the approaches detailed are unsupported
 We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, 
 it contains APIs which make supporting sameSite easier.
 
+### Retargetting your application
+
+To target .NET 4.7.2 or later you must ensure your `web.config` contains the following;
+
+```xml
+<system.web>
+  <compilation debug="true" targetFramework="4.7.2"/>
+  <httpRuntime targetFramework="4.7.2"/>
+</system.web>
+```
+
+You must also check your project file and look for the TargetFrameworkVersion
+
+```xml
+<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+```
+
+The [.NET Migration Guide](https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/) has further details.
+
 ## December patch behviour changes
 
 The specific behavior change is how the `SameSite` property interprets the `None` value. 
