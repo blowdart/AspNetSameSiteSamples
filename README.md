@@ -142,7 +142,7 @@ period Chrome 80 can be launched with the command line argument `--enable-featur
 
 Chrome 79 has warning messages in the browser console (f12 to open) about missing sameSite attributes.
 
-You will also need a browser that does not support the upcoming switch, for example (Chromium v74)[https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Win_x64/638880/].
+You will also need a browser that does not support the upcoming switch, for example [Chromium v74](https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Win_x64/638880/).
 If you're not using a 64bit version of Windows you can use the [OmahaProxy viewer](https://omahaproxy.appspot.com/) 
 to look up which Chromium branch corresponds to Chrome 74 (v74.0.3729.108) using the 
 [instructions provided by Chromium](https://www.chromium.org/getting-involved/download-chromium).
