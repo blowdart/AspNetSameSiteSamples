@@ -59,6 +59,33 @@ How you wire up the detection varies according the version of .NET and the web f
 
 We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, it contains APIs which make supporting sameSite easier.
 
+## Ensuring your site redirects to HTTPS
+
+For ASP.NET 4.x, WebForms and MVC you can use [IIS's URL Rewrite](https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-rewrite-rules-for-the-url-rewrite-module) 
+feature to redirect all requests to HTTPS. An example rule is as follows;
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="Redirect to https" stopProcessing="true">
+          <match url="(.*)"/>
+          <conditions>
+            <add input="{HTTPS}" pattern="Off"/>
+            <add input="{REQUEST_METHOD}" pattern="^get$|^head$" />
+          </conditions>
+          <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="Permanent"/>
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
+```
+
+In on-premises installations of IIS URL Rewrite is an optional feature that may need installing.
+
 ## Testing
 
 You must test your application with the browsers you support and go through your scenarios that involve cookies. 
@@ -107,7 +134,7 @@ Edge supports the old SameSite standard but doesn't have any known compatibility
 ### Electron
 Versions of Electron include older versions of Chromium. For example, the version of Electron used by 
 Teams is Chromium 66, which exhibits the older behavior. You must perform your own compatibility testing with 
-the version of Electron your product uses. See Supporting older browsers in the following section.
+the version of Electron your product uses.
 
 ## Sample list
 
