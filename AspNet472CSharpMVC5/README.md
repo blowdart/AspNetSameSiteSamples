@@ -1,5 +1,5 @@
 ﻿# SameSite Cookie Sample
-## .NET Framework 4.7.2 MVC
+## .NET Framework 4.7.2 C# MVC
 ### Summary
 
 .NET Framework 4.7 has built-in support for the [SameSite](https://www.owasp.org/index.php/SameSite) attribute, but it adheres to the original standard.

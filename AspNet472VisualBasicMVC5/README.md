@@ -1,5 +1,5 @@
 ﻿# SameSite Cookie Sample
-## .NET Framework 4.7.2 VB
+## .NET Framework 4.7.2 VB MVC
 ### Summary
 
 .NET Framework 4.7 has built-in support for the [SameSite](https://www.owasp.org/index.php/SameSite) attribute, but it adheres to the original standard.
@@ -35,18 +35,8 @@ sameSiteCookie.SameSite = SameSiteMode.None
 ' Add the cookie to the response cookie collection
 Response.Cookies.Add(sameSiteCookie)
 ```
-The default sameSite attribute for a forms authentication cookie is set in the `cookieSameSite` parameter of the forms authentication settings in `web.config` 
 
-```xml
-<system.web>
-  <authentication mode="Forms">
-    <forms name=".ASPXAUTH" loginUrl="~/" cookieSameSite="None" requireSSL="true">
-    </forms>
-  </authentication>
-</system.web>
-```
-
-The default sameSite attribute for session state is also set in the 'cookieSameSite' parameter of the session settings in `web.config`
+The default sameSite attribute for session state is set in the 'cookieSameSite' parameter of the session settings in `web.config`
 
 ```xml
 <system.web>
@@ -55,19 +45,30 @@ The default sameSite attribute for session state is also set in the 'cookieSameS
 </system.web>
 ```
 
-The November 2019 update to .NET changed the default settings for Forms Authentication and Session to `lax` as is the most compatible setting, however if you embed pages
-into iframes you may need to revert this setting to None, and then add the [interception](#interception) code shown below to adjust the `none` 
-behavior depending on browser capability.
+### MVC Authentication
 
-### Running the sample
+OWIN MVC cookie based authentication uses a cookie manager to enable the changing of cookie attributes. 
+The [SameSiteCookieManager.vb](SameSiteCookieManager.vb) is an implementation of such a class.
 
-If you run the sample project please load your browser debugger on the initial page and use it to view the cookie collection for the site.
-To do so in Edge and Chrome press `F12` then select the `Application` tab and click the site URL under the `Cookies` option in the `Storage` section.
+The OWIN authentication components must be configured to use the CookieManager in your startup class;
 
-![Browser Debugger Cookie List](BrowserDebugger.jpg)
+```vb
+Public Sub Configuration(app As IAppBuilder)
+    app.UseCookieAuthentication(New CookieAuthenticationOptions() With {
+        .CookieSameSite = SameSiteMode.None,
+        .CookieHttpOnly = True,
+        .CookieSecure = CookieSecureOption.Always,
+        .CookieManager = New SameSiteCookieManager(New SystemWebCookieManager())
+    })
+End Sub
+```
 
-You can see from the image above that the cookie created by the sample when you click the "Create Cookies" button has a SameSite attribute value of `Lax`,
-matching the value set in the [sample code](#sampleCode).
+A cookie manager must be set on each component that supports it, this includes CookieAuthentication and
+OpenIdConnectAuthentication.
+
+The SystemWebCookieManager is used to avoid 
+[known issues](https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues) 
+with response cookie integration.
 
 ## <a name="interception"></a>Intercepting cookies you do not control
 
@@ -76,8 +77,7 @@ are returned to the client machine. In the sample we wire up the event to a stat
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
 See [global.asax](global.asax.vb) for an example of hooking up the event and
-[SameSiteCookieRewriter.cs](SameSiteCookieRewriter.vb) for an example of handling the event and adjusting the cookie `sameSite` attribute.
-
+[SameSiteCookieRewriter.vb](SameSiteCookieRewriter.vb) for an example of handling the event and adjusting the cookie `sameSite` attribute.
 
 ```vb
 Sub FilterSameSiteNoneForIncompatibleUserAgents(ByVal sender As Object)
@@ -130,9 +130,11 @@ Public Shared Sub AdjustSpecificCookieSettings()
 End Sub
 ```
 
-## More Information
-
+### More Information
+ 
 [Chrome Updates](https://www.chromium.org/updates/same-site)
+
+[OWIN SameSite Documentation](https://docs.microsoft.com/en-us/aspnet/samesite/owin-samesite)
 
 [ASP.NET Documentation](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite)
 
