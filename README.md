@@ -182,7 +182,7 @@ We *strongly* advise you [target .NET 4.7.2](#retargeting) or greater if you are
 it contains APIs which make supporting sameSite easier.
 
 * .NET 4.5 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
-* .NET 3.5 - [C#](AspNet35CSharp/README.md) and [VB](AspNet35VisualBasic/README.md)
+* .NET 3.5 - [C#](AspNet35CSharp/README.md) and [VB.Net](AspNet35VisualBasic/README.md)
 
 **More to come**
 
