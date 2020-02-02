@@ -170,10 +170,15 @@ the version of Electron your product uses.
 
 ## Sample Code
 
+### Supported configurations
+
 This solution contains examples of what is possible in
 
+* .NET Core 2.1 [MVC](AspNetCore21MVC/README.md) and [Razor Pages](AspNetCore21RazorPages/README.md)
 * .NET 4.7.2 and ASP.NET MVC 5 - [C#](AspNet472CSharpMVC5/README.md) and [VB.Net](AspNet472VisualBasicMVC5/README.md)
 * .NET 4.7.2 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
+
+### Unsupported configurations
 
 *Any version of .NET or ASP.NET before .NET 4.7.2 is unaware of the sameSite attribute. Samples for these older
 versions are provided as a courtesy, but the approaches detailed are unsupported by Microsoft.*
@@ -181,17 +186,20 @@ versions are provided as a courtesy, but the approaches detailed are unsupported
 We *strongly* advise you [target .NET 4.7.2](#retargeting) or greater if you are not already doing so, 
 it contains APIs which make supporting sameSite easier.
 
-* .NET 4.5 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
 * .NET 3.5 - [C#](AspNet35CSharp/README.md) and [VB.Net](AspNet35VisualBasic/README.md)
 
 **More to come**
 
+VB WebForms ASP.NET 4.5
+.NET Core 3.0 Razor Pages and MVC
+ASP.NET 4.5 MVC C# and MVC
+
 ## Reverting SameSite patches
 
-You can revert the updated sameSite behavior in .NET to its previous behavior where the sameSite attribute is not
-emitted for a value of 'None', and revert the authentication and session cookies to not emit the value. This should be 
-viewed as an *extremely temporary fix*, as the Chrome changes will break any external POST requests or authentication
-for users using Chrome.
+You can revert the updated sameSite behavior in .NET Framework and .NET Core applications to its previous behavior where the 
+sameSite attribute is not emitted for a value of 'None', and revert the authentication and session cookies to not 
+emit the value. This should be viewed as an *extremely temporary fix*, as the Chrome changes will break any external 
+POST requests or authentication for users using browsers which support the changes to the standard.
 
 ### Reverting .NET 4.7.2 Behavior
 
@@ -211,6 +219,18 @@ Update your web.config to include the following configuration settings;
   </system.web> 
 </configuration>
 
+```
+
+### Reverting .NET Core Behavior
+
+Add a `runtimeconfig.template.json` file to your project containing:
+
+```json
+{ 
+  "configProperties": { 
+    "Microsoft.AspNetCore.SuppressSameSiteNone": "true" 
+  } 
+} 
 ```
 
 ## More Information

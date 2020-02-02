@@ -6,7 +6,7 @@
 The patched behavior changed the meaning of `SameSite.None` to emit the attribute with a value of `None`, rather than not emit the value at all. If
 you want to not emit the value you can set the `SameSite` property on a cookie to -1.
 
-### <a name="sampleCode"></a>Writing the SameSite attribute
+## <a name="sampleCode"></a>Writing the SameSite attribute
 
 Following is an example of how to write a SameSite attribute on a cookie;
 

@@ -198,6 +198,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <Content Include="BrowserDebugger.jpg" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>

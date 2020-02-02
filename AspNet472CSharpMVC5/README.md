@@ -6,7 +6,7 @@
 The patched behavior changed the meaning of `SameSite.None` to emit the attribute with a value of `None`, rather than not emit the value at all. If
 you want to not emit the value you can set the `SameSite` property on a cookie to -1.
 
-### <a name="sampleCode"></a>Writing the SameSite attribute
+## <a name="sampleCode"></a>Writing the SameSite attribute
 
 Following is an example of how to write a SameSite attribute on a cookie;
 
@@ -42,7 +42,7 @@ The default sameSite attribute for session state is set in the 'cookieSameSite' 
 </system.web>
 ```
 
-### MVC Authentication
+## MVC Authentication
 
 OWIN MVC cookie based authentication uses a cookie manager to enable the changing of cookie attributes. 
 The [SameSiteCookieManager.cs](SameSiteCookieManager.cs) is an implementation of such a class.
@@ -68,6 +68,16 @@ OpenIdConnectAuthentication.
 The SystemWebCookieManager is used to avoid 
 [known issues](https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues) 
 with response cookie integration.
+
+### Running the sample
+
+If you run the sample project please load your browser debugger on the initial page and use it to view the cookie collection for the site.
+To do so in Edge and Chrome press `F12` then select the `Application` tab and click the site URL under the `Cookies` option in the `Storage` section.
+
+![Browser Debugger Cookie List](BrowserDebugger.jpg)
+
+You can see from the image above that the cookie created by the sample when you click the "Create Cookies" button has a SameSite attribute value of `Lax`,
+matching the value set in the [sample code](#sampleCode).
 
 ## <a name="interception"></a>Intercepting cookies you do not control
 

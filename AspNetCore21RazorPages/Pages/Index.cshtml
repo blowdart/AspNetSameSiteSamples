@@ -1,0 +1,30 @@
+﻿@page
+@model IndexModel
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>ASP.NET Core 2.1 C# SameSite Razor Pages sample</title>
+</head>
+<body>
+    <p><b>Current Cookies</b></p>
+    <table>
+        <thead>
+            <tr>
+                <td>Cookie</td>
+                <td>Value</td>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var cookieDetail in Model.CookieDetails)
+        {
+            <tr>
+                <td>@cookieDetail.Name</td>
+                <td>@cookieDetail.Value</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <form method="post">
+        <input type="submit" value="Create Cookies" />
+    </form>
+</body>
+</html>

@@ -65,21 +65,12 @@ Public Class _Default
             Dim TableRow As New TableRow
             Dim nameCell As New TableCell
             Dim valueCell As New TableCell
-            Dim secureCell As New TableCell
-            Dim domainCell As New TableCell
-            Dim pathCell As New TableCell
 
             nameCell.Text = HttpUtility.HtmlEncode(cookie.Name)
             valueCell.Text = HttpUtility.HtmlEncode(cookie.Value)
-            secureCell.Text = cookie.Secure.ToString(CultureInfo.InvariantCulture)
-            domainCell.Text = HttpUtility.HtmlEncode(cookie.Domain)
-            pathCell.Text = HttpUtility.HtmlEncode(cookie.Path)
 
             TableRow.Cells.Add(nameCell)
             TableRow.Cells.Add(valueCell)
-            TableRow.Cells.Add(secureCell)
-            TableRow.Cells.Add(domainCell)
-            TableRow.Cells.Add(pathCell)
 
             CookieList.Rows.Add(TableRow)
         Next

@@ -73,21 +73,12 @@ namespace AspNet472CSharpWebForms
                 TableRow tableRow = new TableRow();
                 TableCell nameCell = new TableCell();
                 TableCell valueCell = new TableCell();
-                TableCell secureCell = new TableCell();
-                TableCell domainCell = new TableCell();
-                TableCell pathCell = new TableCell();
 
                 nameCell.Text = HttpUtility.HtmlEncode(cookie.Name);
                 valueCell.Text = HttpUtility.HtmlEncode(cookie.Value);
-                secureCell.Text = cookie.Secure.ToString(CultureInfo.InvariantCulture);
-                domainCell.Text = HttpUtility.HtmlEncode(cookie.Domain);
-                pathCell.Text = HttpUtility.HtmlEncode(cookie.Path);
 
                 tableRow.Cells.Add(nameCell);
                 tableRow.Cells.Add(valueCell);
-                tableRow.Cells.Add(secureCell);
-                tableRow.Cells.Add(domainCell);
-                tableRow.Cells.Add(pathCell);
 
                 CookieList.Rows.Add(tableRow);
             }

@@ -12,9 +12,6 @@
             <asp:TableHeaderRow>
                 <asp:TableHeaderCell>Cookie</asp:TableHeaderCell>
                 <asp:TableHeaderCell>Value</asp:TableHeaderCell>
-                <asp:TableHeaderCell>Secure</asp:TableHeaderCell>
-                <asp:TableHeaderCell>Domain</asp:TableHeaderCell>
-                <asp:TableHeaderCell>Path</asp:TableHeaderCell>
             </asp:TableHeaderRow>
         </asp:Table>
         <asp:Button ID="WriteCookie" runat="server" Text="Create Cookies" OnClick="WriteCookie_Click" />

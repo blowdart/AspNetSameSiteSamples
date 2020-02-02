@@ -20,9 +20,6 @@
                 @<tr>
                     <td>@Request.Cookies(cookie).Name</td>
                     <td>@Request.Cookies(cookie).Value</td>
-                    <td>@Request.Cookies(cookie).Secure</td>
-                    <td>@Request.Cookies(cookie).Domain</td>
-                    <td>@Request.Cookies(cookie).Path</td>
                 </tr>
             Next
         </tbody>

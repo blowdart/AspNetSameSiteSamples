@@ -6,6 +6,7 @@ Public Class Global_asax
     Sub Application_PostAcquireRequestState(ByVal sender As Object, ByVal e As EventArgs)
         If TypeOf sender Is HttpApplication Then
             Dim app As HttpApplication = sender
+            ' This has a side effect of create the cookies if they do not exist.
             If (SameSite.BrowserDetection.AllowsSameSiteNone(app.Request.UserAgent)) Then
                 SetSameSite(app.Response.Cookies("ASP.NET_SessionId"), "None")
                 SetSameSite(app.Response.Cookies(".ASPXAUTH"), "None")
