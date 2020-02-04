@@ -74,7 +74,7 @@ use the `CookiePolicy` middleware. This must be placed into the http request pip
 cookies and configured within `ConfigureServices()`.
 
 To insert it into the pipeline use `app.UseCookiePolicy()` in the `Configure(IApplicationBuilder, IHostingEnvironment)`
-method in your [startup.cs](startup.cs). For example
+method in your [startup.cs](Startup.cs). For example
 
 ```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
