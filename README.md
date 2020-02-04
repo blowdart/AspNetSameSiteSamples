@@ -21,10 +21,10 @@ will break applications which rely on the standardized behavior, including some 
 ## .NET support for the sameSite attribute
 
 .NET 4.7.2 and 4.8 supports the 2019 draft standard for SameSite since the release of updates in December 2019. 
-Developers are able to programmatically control the value of the SameSite header using the 
+Developers are able to programmatically control the value of the SameSite attribute using the 
 `HttpCookie.SameSite` property. Setting the `SameSite` property to Strict, Lax, or None results in those values 
 being written on the network with the cookie. Setting it equal to (SameSiteMode)(-1) indicates that 
-no SameSite header should be included on the network with the cookie. 
+no SameSite attribute should be included on the network with the cookie. 
 
 The `HttpCookie.Secure` Property, or `requireSSL` in config files, can be used to mark the cookie as Secure or not.
 
@@ -53,9 +53,40 @@ You must also check your project file and look for the TargetFrameworkVersion
 
 The [.NET Migration Guide](https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/) has further details.
 
-## December patch behviour changes
+## .NET Core support for the sameSite attribute
 
-The specific behavior change is how the `SameSite` property interprets the `None` value. 
+.NET Core 2.2 supports the 2019 draft standard for SameSite since the release of updates in December 2019. 
+Developers are able to programmatically control the value of the sameSite attribute using the 
+`HttpCookie.SameSite` property. Setting the `SameSite` property to Strict, Lax, or None results in those values 
+being written on the network with the cookie. Setting it equal to (SameSiteMode)(-1) indicates that 
+no sameSite attribute should be included on the network with the cookie. 
+
+```
+var cookieOptions = new CookieOptions
+{
+    // Set the secure flag, which Chrome's changes will require for SameSite none.
+    // Note this will also require you to be running on HTTPS
+    Secure = true,
+
+    // Set the cookie to HTTP only which is good practice unless you really do need
+    // to access it client side in scripts.
+    HttpOnly = true,
+
+    // Add the SameSite attribute, this will emit the attribute with a value of none.
+    // To not emit the attribute at all set the SameSite property to (SameSiteMode)(-1).
+    SameSite = SameSiteMode.None
+};
+
+// Add the cookie to the response cookie collection
+Response.Cookies.Append(CookieName, "cookieValue", cookieOptions);
+```
+
+.NET Core 3.0 supports the updated SameSite values and adds an extra enum value, `SameSiteMode.Unspecified` to the `SameSiteMode` enum.
+This new value indicates no sameSite should be sent with the cookie.
+
+## December patch behavior changes
+
+The specific behavior change for .NET Framework and .NET Core 2.1 is how the `SameSite` property interprets the `None` value. 
 Before the patch a value of `None` meant "Do not emit the attribute at all", after
 the patch it means "Emit the attribute with a value of `None`". 
 After the patch a `SameSite` value of `(SameSiteMode)(-1)` causes the attribute not to be emitted.
@@ -218,7 +249,6 @@ Update your web.config to include the following configuration settings;
     <sessionState cookieSameSite="None" /> 
   </system.web> 
 </configuration>
-
 ```
 
 ### Reverting .NET Core Behavior

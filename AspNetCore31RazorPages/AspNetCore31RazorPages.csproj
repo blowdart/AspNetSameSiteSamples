@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-
+  <ItemGroup>
+    <Compile Include="..\SameSiteSupport.cs" Link="SameSiteSupport.cs" />
+  </ItemGroup>
 
 </Project>
