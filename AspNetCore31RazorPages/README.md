@@ -31,7 +31,7 @@ Response.Cookies.Append(CookieName, "cookieValue", cookieOptions);
 
 ## Setting Cookie Authentication and Session State cookies
 
-Cookie authentication, session state and [various other components](https://docs.microsoft.com/en-us/aspnet/core/security/samesite?view=aspnetcore-2.1)
+Cookie authentication, session state and [various other components](https://docs.microsoft.com/en-us/aspnet/core/security/samesite?view=aspnetcore-3.0)
 set their sameSite options via Cookie options, for example
 
 ```c#
