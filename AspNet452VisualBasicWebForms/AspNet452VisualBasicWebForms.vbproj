@@ -103,6 +103,7 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BrowserDebugger - Copy.jpg" />
     <Content Include="BrowserDebugger.jpg" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
