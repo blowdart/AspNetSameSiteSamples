@@ -56,7 +56,7 @@ of any modules in your ASP.NET pipeline. Attempting to use this event will cause
 
 However you can you can intercept the request/response pipeline to adjust the session and forms authentication cookies before it is written back to the client. The sample code creates a session 
 cookie and a forms authentication cookie, which in .NET 3.5 are unaware of the sameSite attribute so the 
-[global.asx](Global.asx.cs) `Application_PostAcquireRequestState` event is then used to intercept the response. 
+[global.asax](Global.asax.cs) `Application_PostAcquireRequestState` event is then used to intercept the response. 
 The sample adds both the sameSite attribute and adjusts the `Secure` property to the session and forms authentication 
 cookies to match the new changes made in Chrome. Your website must be running on HTTPS for the secure flag to work as 
 expected. This technique reliably works for the session and forms authentication cookies due to where the are 
