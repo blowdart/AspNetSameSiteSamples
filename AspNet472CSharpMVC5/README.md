@@ -85,7 +85,7 @@ matching the value set in the [sample code](#sampleCode).
 are returned to the client machine. In the sample we wire up the event to a static method which checks whether the browser supports the new sameSite changes,
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
-See [global.asax](global.asax.cs) for an example of hooking up the event and
+See [global.asax](Global.asax.cs) for an example of hooking up the event and
 [SameSiteCookieRewriter.cs](SameSiteCookieRewriter.cs) for an example of handling the event and adjusting the cookie `sameSite` attribute.
 
 ```c#
