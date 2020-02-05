@@ -71,10 +71,21 @@ public class Global : System.Web.HttpApplication
         // Set SessionState cookie to SameSite=None
         if (sender is HttpApplication app)
         {
-            if (SameSite.BrowserDetection.DisallowsSameSiteNone(app.Request.UserAgent))
+            if (SameSite.BrowserDetection.AllowsSameSiteNone(app.Request.UserAgent))
             {
-                SetSameSite(app.Response.Cookies[".ASPXAUTH"], "None");
-                SetSameSite(app.Response.Cookies["ASP.NET_SessionId"], "None");
+                string[] allKeys = app.Response.Cookies.AllKeys;
+                foreach (string cookieName in allKeys)
+                {
+                    switch (cookieName)
+                    {
+                        case "ASP.Net_SessionId":
+                        case ".ASPXAUTH":
+                            SetSameSite(app.Response.Cookies[cookieName], "None");
+                            break;
+                        default:
+                            break;
+                     }
+                }
             }
         }
     }
