@@ -14,8 +14,20 @@ namespace AspNet35CSharp
                 // This has a side effect of create the cookies if they do not exist.
                 if (SameSite.BrowserDetection.AllowsSameSiteNone(app.Request.UserAgent))
                 {
-                    SetSameSite(app.Response.Cookies["ASP.NET_SessionId"], "None");
-                    SetSameSite(app.Response.Cookies[".ASPXAUTH"], "None");
+                    string[] allKeys = app.Response.Cookies.AllKeys;
+                    foreach (string cookieName in allKeys)
+                    {
+                        switch (cookieName)
+                        {
+                            case "ASP.Net_SessionId":
+                            case ".ASPXAUTH":
+                                SetSameSite(app.Response.Cookies[cookieName], "None");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                 }
             }
         }
