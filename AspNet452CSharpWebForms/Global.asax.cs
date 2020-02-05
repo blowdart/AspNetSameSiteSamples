@@ -15,7 +15,7 @@ namespace AspNet45CSharpWebForms
             // where we want to force sameSite but which are out of our control.
             SameSiteCookieRewriter.FilterSameSiteNoneForIncompatibleUserAgents(
                 sender,
-                new Dictionary<string, string>() { { "ASP.NET_SessionId", "None" }, { ".ASPXAUTH", "None" } });
+                new Dictionary<string, SameSiteMode>() { { "ASP.NET_SessionId", SameSiteMode.None }, { ".ASPXAUTH", SameSiteMode.None } });
         }
     }
 }
