@@ -18,7 +18,7 @@ Originally drafted in [2016](https://tools.ietf.org/html/draft-west-first-party-
 The value `sameSite=None` is not allowed by the 2016 standard and causes some implementations which confirm to the original sample to treat such cookies as SameSite=Strict, which
 will break applications which rely on the standardized behavior, including some forms of authentication like OpenID Connect (OIDC) and WS-Federation
 
-## .NET support for the sameSite attribute
+## .NET Framework support for the sameSite attribute
 
 .NET 4.7.2 and 4.8 supports the 2019 draft standard for SameSite since the release of updates in December 2019. 
 Developers are able to programmatically control the value of the SameSite attribute using the 
@@ -27,12 +27,6 @@ being written on the network with the cookie. Setting it equal to (SameSiteMode)
 no SameSite attribute should be included on the network with the cookie. 
 
 The `HttpCookie.Secure` Property, or `requireSSL` in config files, can be used to mark the cookie as Secure or not.
-
-*Any version of .NET or ASP.NET before .NET 4.7.2 is unaware of the sameSite attribute. Samples for these older
-versions are provided as a courtesy, but the approaches detailed are unsupported by Microsoft.*
-
-We *strongly* advise you target .NET 4.7.2 or greater if you are not already doing so, 
-it contains APIs which make supporting sameSite easier.
 
 ### <a name="retargeting"></a>Re-targeting your application
 
@@ -201,29 +195,11 @@ the version of Electron your product uses.
 
 ## Sample Code
 
-### Supported configurations
-
 This solution contains examples of what is possible in
 
 * .NET Core 2.1 [MVC](AspNetCore21MVC/README.md) and [Razor Pages](AspNetCore21RazorPages/README.md)
 * .NET 4.7.2 and ASP.NET MVC 5 - [C#](AspNet472CSharpMVC5/README.md) and [VB.Net](AspNet472VisualBasicMVC5/README.md)
 * .NET 4.7.2 and ASP.NET WebForms - [C#](AspNet472CSharpWebForms/README.md) and [VB.Net](AspNet472VisualBasicWebForms/README.md)
-
-### Unsupported configurations
-
-*Any version of .NET or ASP.NET before .NET 4.7.2 is unaware of the sameSite attribute. Samples for these older
-versions are provided as a courtesy, but the approaches detailed are unsupported by Microsoft.*
-
-We *strongly* advise you [target .NET 4.7.2](#retargeting) or greater if you are not already doing so, 
-it contains APIs which make supporting sameSite easier.
-
-* .NET 3.5 - [C#](AspNet35CSharp/README.md) and [VB.Net](AspNet35VisualBasic/README.md)
-
-**More to come**
-
-VB WebForms ASP.NET 4.5
-.NET Core 3.0 Razor Pages and MVC
-ASP.NET 4.5 MVC C# and MVC
 
 ## Reverting SameSite patches
 
