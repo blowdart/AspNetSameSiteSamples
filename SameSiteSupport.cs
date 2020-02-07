@@ -8,6 +8,11 @@ namespace SameSite
         // Same as https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/
         public static bool DisallowsSameSiteNone(string userAgent)
         {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return true;
+            }
+
             // Note that these detections are a starting point. See https://www.chromium.org/updates/same-site/incompatible-clients for more detections.
 
             // Cover all iOS based browsers here. This includes:

@@ -7,6 +7,10 @@ Namespace SameSite
         Function DisallowsSameSiteNone(ByVal userAgent As String) As Boolean
             ' Note that these detections are a starting point. See https://www.chromium.org/updates/same-site/incompatible-clients for more detections.
 
+            If String.IsNullOrEmpty(userAgent) Then
+                Return True
+            End If
+
             ' Cover all iOS based browsers here. This includes
             ' - Safari on iOS 12 for iPhone, iPod Touch, iPad
             ' - WkWebview on iOS 12 for iPhone, iPod Touch, iPad
