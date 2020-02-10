@@ -19,12 +19,16 @@ namespace AspNet45CSharpWebForms
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static SameSiteCookieRewriter()
         {
+            System.Diagnostics.Debug.WriteLine("Checking if we're on a patched framework");
+
             var systemWeb = typeof(HttpContextBase).Assembly;
 
             // Check if we're actually on top of a runtime that has sameSite support.
             IsSameSitePropertyAvailable = systemWeb.GetType("System.Web.SameSiteMode") != null;
             if (IsSameSitePropertyAvailable)
             {
+                System.Diagnostics.Debug.WriteLine("We are on a patched framework");
+
                 SameSiteGetter = typeof(HttpCookie).GetProperty("SameSite").GetMethod;
                 SameSiteSetter = typeof(HttpCookie).GetProperty("SameSite").SetMethod;
             }
@@ -35,25 +39,52 @@ namespace AspNet45CSharpWebForms
             HttpApplication application = sender as HttpApplication;
             if (application != null)
             {
+                System.Diagnostics.Debug.WriteLine("Adding AddOnSendingHeaders()");
+
                 HttpContext.Current.Response.AddOnSendingHeaders(context =>
                 {
+                    System.Diagnostics.Debug.WriteLine("Inside AddOnSendingHeaders()");
+
+                    System.Diagnostics.Debug.WriteLine("Looping though " + context.Response.Headers.Count + " headers");
+
+                    for (int i = 0; i < context.Response.Headers.Count; i++)
+                    {
+                        string name = context.Response.Headers.GetKey(i);
+                        string value = context.Response.Headers.Get(i);
+
+                        System.Diagnostics.Debug.WriteLine("Header Key: " + name + " Value: " + value);
+
+                    }
+
                     var cookies = context.Response.Cookies;
+
+                    System.Diagnostics.Debug.WriteLine("Looping though " + cookies.Count + " cookies");
+
                     var userAgent = application.Context.Request.UserAgent;
+
+                    System.Diagnostics.Debug.WriteLine("User Agent " + userAgent);
 
                     for (var i = 0; i < cookies.Count; i++)
                     {
                         var cookie = cookies[i];
 
+                        System.Diagnostics.Debug.WriteLine("Chomping down on " + cookie.Name);
+
                         // Check if we need to force a sameSite value for this cookie, before we then transform it based on browser support.
                         if (sameSiteOverrides.ContainsKey(cookie.Name))
                         {
+                            System.Diagnostics.Debug.WriteLine("We have a configured override for this cookie.");
+
                             SetSameSiteAttribute(cookie, sameSiteOverrides[cookie.Name]);
                         }
 
                         if (SameSite.BrowserDetection.DisallowsSameSiteNone(userAgent))
                         {
+                            System.Diagnostics.Debug.WriteLine("Browser doesn't support SameSite=None value");
+
                             if (IsSameSitePropertyAvailable)
                             {
+                                System.Diagnostics.Debug.WriteLine("Removing via setter");
                                 object existingValueViaReflection = SameSiteGetter.Invoke(cookie, null);
                                 int existingSameSiteValue = Convert.ToInt32(existingValueViaReflection);
 
@@ -64,6 +95,8 @@ namespace AspNet45CSharpWebForms
                             }
                             else
                             {
+                                System.Diagnostics.Debug.WriteLine("Adjusting the path hack on " + cookie.Path);
+
                                 // As SameSite in .NET < 4.7.2 can only be manually appended to path, we need to split the path to see if the attribute is set.
                                 // This is very fragile and should be considered a last resort. Users should consider updating to .NET 4.7.2 where possible.
                                 if (cookie.Path.Contains(';'))
@@ -96,9 +129,14 @@ namespace AspNet45CSharpWebForms
 
         private static void SetSameSiteAttribute(HttpCookie c, SameSiteMode sameSiteMode)
         {
+            System.Diagnostics.Debug.WriteLine("Setting SameSite attribute on "+c.Name);
+
+
             // Use the underlying framework SameSite property if available.
             if (IsSameSitePropertyAvailable)
             {
+                System.Diagnostics.Debug.WriteLine("Calling into SameSiteProperty and setting " + sameSiteMode.ToString());
+
                 // Are we running on a runtime that has been patched to support SameSite -1 to avoid writing the value?
                 SameSiteSetter.Invoke(c, new object[]
                 {
@@ -117,6 +155,8 @@ namespace AspNet45CSharpWebForms
             else
             {
                 const string sameSiteAttribute = "sameSite=";
+
+                System.Diagnostics.Debug.WriteLine("Hacking the path");
 
                 // Cookie already has a SameSite value. Replace it.
                 if (c.Path.Contains(sameSiteAttribute))
@@ -140,6 +180,9 @@ namespace AspNet45CSharpWebForms
                     // Adding a value where it didn't exist before is easy.
                     c.Path += "; " + sameSiteAttribute + sameSiteMode.ToString();
                 }
+
+                System.Diagnostics.Debug.WriteLine("Set path to " + c.Path);
+
 
                 // If we set the sameSite attribute to none the new Chrome changes also need it to be marked as secure.
                 // Your website must be running on HTTPS for the Secure flag to work as expected.
