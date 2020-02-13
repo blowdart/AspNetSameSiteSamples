@@ -48,9 +48,25 @@ The default sameSite attribute for session state is set in the 'cookieSameSite' 
 ## MVC Authentication
 
 OWIN MVC cookie based authentication uses a cookie manager to enable the changing of cookie attributes. 
-The [SameSiteCookieManager.vb](SameSiteCookieManager.vb) is an implementation of such a class.
+The [SameSiteCookieManager.vb](SameSiteCookieManager.vb) is an implementation of such a class which you can copy into your
+own projects. 
 
-The OWIN authentication components must be configured to use the CookieManager in your startup class;
+You must ensure your Microsoft.Owin components are all upgraded to version 4.1.0 or greater. Check your `packages.config` 
+file to ensure all the version numbers match, for example.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <!-- other packages -->
+  <package id="Microsoft.Owin.Host.SystemWeb" version="4.1.0" targetFramework="net472" />
+  <package id="Microsoft.Owin.Security" version="4.1.0" targetFramework="net472" />
+  <package id="Microsoft.Owin.Security.Cookies" version="4.1.0" targetFramework="net472" />
+  <package id="Microsoft.Web.Infrastructure" version="1.0.0.0" targetFramework="net472" />
+  <package id="Owin" version="1.0" targetFramework="net472" />
+</packages>
+```
+
+The authentication components must be configured to use the CookieManager in your startup class;
 
 ```vb
 Public Sub Configuration(app As IAppBuilder)
@@ -63,7 +79,7 @@ Public Sub Configuration(app As IAppBuilder)
 End Sub
 ```
 
-A cookie manager must be set on each component that supports it, this includes CookieAuthentication and
+A cookie manager must be set on *each* component that supports it, this includes CookieAuthentication and
 OpenIdConnectAuthentication.
 
 The SystemWebCookieManager is used to avoid 
@@ -87,7 +103,8 @@ are returned to the client machine. In the sample we wire up the event to a stat
 and if not, changes the cookies to not emit the attribute if the new `None` value has been set.
 
 See [global.asax](Global.asax.vb) for an example of hooking up the event and
-[SameSiteCookieRewriter.vb](SameSiteCookieRewriter.vb) for an example of handling the event and adjusting the cookie `sameSite` attribute.
+[SameSiteCookieRewriter.vb](SameSiteCookieRewriter.vb) for an example of handling the event and adjusting the cookie `sameSite` attribute which you can
+copy into your own code.
 
 ```vb
 Sub FilterSameSiteNoneForIncompatibleUserAgents(ByVal sender As Object)

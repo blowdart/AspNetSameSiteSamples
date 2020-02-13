@@ -21,12 +21,17 @@ will break applications which rely on the standardized behavior, including some 
 ## .NET Framework support for the sameSite attribute
 
 .NET 4.7.2 and 4.8 supports the 2019 draft standard for SameSite since the release of updates in December 2019. 
-Developers are able to programmatically control the value of the SameSite attribute using the 
+Developers are able to control the value of the SameSite attribute in code using the 
 `HttpCookie.SameSite` property. Setting the `SameSite` property to Strict, Lax, or None results in those values 
 being written on the network with the cookie. Setting it equal to (SameSiteMode)(-1) indicates that 
 no SameSite attribute should be included on the network with the cookie. 
 
-The `HttpCookie.Secure` Property, or `requireSSL` in config files, can be used to mark the cookie as Secure or not.
+Microsoft does not support any .NET version lower that 4.7.2 for writing the same-site cookie attribute. We have not found a reliable way to
+ensure the attribute is written correctly based on browser version, nor have we found a reliable way to intercept and adjust authentication 
+and session cookies on older framework versions.
+
+The `HttpCookie.Secure` Property, or `requireSSL` in web.config files, can be used to mark the cookie as Secure or not.
+
 
 ### <a name="retargeting"></a>Re-targeting your application
 
@@ -45,7 +50,23 @@ You must also check your project file and look for the TargetFrameworkVersion
 <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
 ```
 
-The [.NET Migration Guide](https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/) has further details.
+The [.NET Migration Guide](https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/) has further details. 
+
+Note you should also check any nuget packages you have in your project are also targeted at the framework
+version you re-targeted to where appropriate. You can do this by examining your `packages.config` file, for example
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="Microsoft.AspNet.Mvc" version="5.2.7" targetFramework="net472" />
+  <package id="Microsoft.ApplicationInsights" version="2.4.0" targetFramework="net451" />
+</packages>
+```
+
+In the packages.config file shown above the `Microsoft.ApplicationInsights` package is still targeted against .NET 4.5.1, 
+and should have its targetFramework attribute updated to `net472` if an updated package targeting your new framework target
+exists.
+
 
 ## .NET Core support for the sameSite attribute
 
