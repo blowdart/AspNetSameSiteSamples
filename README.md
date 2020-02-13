@@ -193,7 +193,7 @@ Versions of Electron include older versions of Chromium. For example, the versio
 Teams is Chromium 66, which exhibits the older behavior. You must perform your own compatibility testing with 
 the version of Electron your product uses.
 
-## Sample Code
+##<a name="sampleCode"></a> Sample Code
 
 This solution contains examples of what is possible in
 

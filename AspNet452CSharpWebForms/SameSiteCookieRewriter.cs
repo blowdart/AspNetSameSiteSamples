@@ -23,7 +23,8 @@ namespace AspNet45CSharpWebForms
 
             var systemWeb = typeof(HttpContextBase).Assembly;
 
-            // Check if we're actually on top of a runtime that has sameSite support.
+            // Check if we're actually on top of a runtime that has sameSite support,
+            // even if it's not exposed due to target
             IsSameSitePropertyAvailable = systemWeb.GetType("System.Web.SameSiteMode") != null;
             if (IsSameSitePropertyAvailable)
             {
@@ -78,6 +79,32 @@ namespace AspNet45CSharpWebForms
                             SetSameSiteAttribute(cookie, sameSiteOverrides[cookie.Name]);
                         }
 
+                        if (IsSameSitePropertyAvailable)
+                        {
+                            // Fix up the path hack when the underlying framework supports the property
+                            if (cookie.Path.Contains(';'))
+                            {
+                                const string sameSiteProperty = "sameSite";
+                                var splitPath = cookie.Path.Split(';');
+                                // We potentially have a sameSite attribute
+                                for (var j = 1; j < splitPath.Length; j++)
+                                {
+                                    var splitAttribute = splitPath[j].Split('=');
+
+                                    if (string.Compare(sameSiteProperty, splitAttribute[0].TrimStart(), false) == 0)
+                                    {
+                                        var sameSiteValue = splitAttribute[1].TrimStart();
+                                        if (Enum.TryParse(sameSiteValue, true, out SameSiteMode sameSiteMode))
+                                        {
+                                            // Reset the path to not have the hack and set the underlying property.
+                                            cookie.Path = splitPath[0];
+                                            SetSameSiteAttribute(cookie, sameSiteMode);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (SameSite.BrowserDetection.DisallowsSameSiteNone(userAgent))
                         {
                             System.Diagnostics.Debug.WriteLine("Browser doesn't support SameSite=None value");
@@ -127,9 +154,9 @@ namespace AspNet45CSharpWebForms
             }
         }
 
-        private static void SetSameSiteAttribute(HttpCookie c, SameSiteMode sameSiteMode)
+        private static void SetSameSiteAttribute(HttpCookie cookie, SameSiteMode sameSiteMode)
         {
-            System.Diagnostics.Debug.WriteLine("Setting SameSite attribute on "+c.Name);
+            System.Diagnostics.Debug.WriteLine("Setting SameSite attribute on " + cookie.Name);
 
 
             // Use the underlying framework SameSite property if available.
@@ -138,7 +165,7 @@ namespace AspNet45CSharpWebForms
                 System.Diagnostics.Debug.WriteLine("Calling into SameSiteProperty and setting " + sameSiteMode.ToString());
 
                 // Are we running on a runtime that has been patched to support SameSite -1 to avoid writing the value?
-                SameSiteSetter.Invoke(c, new object[]
+                SameSiteSetter.Invoke(cookie, new object[]
                 {
                     sameSiteMode
                 });
@@ -147,7 +174,7 @@ namespace AspNet45CSharpWebForms
                 // Your website must be running on HTTPS for the Secure flag to work as expected.
                 if (sameSiteMode == SameSiteMode.None)
                 {
-                    c.Secure = true;
+                    cookie.Secure = true;
                 }
 
                 return;
@@ -159,10 +186,10 @@ namespace AspNet45CSharpWebForms
                 System.Diagnostics.Debug.WriteLine("Hacking the path");
 
                 // Cookie already has a SameSite value. Replace it.
-                if (c.Path.Contains(sameSiteAttribute))
+                if (cookie.Path.Contains(sameSiteAttribute))
                 {
                     // Find the SameSite value
-                    string[] pathParts = c.Path.Split(new char[] { ';' });
+                    string[] pathParts = cookie.Path.Split(new char[] { ';' });
                     for (int i = 0; i < pathParts.Length; i++)
                     {
                         // Update the SameSite value
@@ -173,22 +200,22 @@ namespace AspNet45CSharpWebForms
                     }
 
                     // Replace the path
-                    c.Path = string.Join(";", pathParts);
+                    cookie.Path = string.Join(";", pathParts);
                 }
                 else
                 {
                     // Adding a value where it didn't exist before is easy.
-                    c.Path += "; " + sameSiteAttribute + sameSiteMode.ToString();
+                    cookie.Path += "; " + sameSiteAttribute + sameSiteMode.ToString();
                 }
 
-                System.Diagnostics.Debug.WriteLine("Set path to " + c.Path);
+                System.Diagnostics.Debug.WriteLine("Set path to " + cookie.Path);
 
 
                 // If we set the sameSite attribute to none the new Chrome changes also need it to be marked as secure.
                 // Your website must be running on HTTPS for the Secure flag to work as expected.
                 if (string.Compare("None", sameSiteMode.ToString(), false, CultureInfo.InvariantCulture) == 0)
                 {
-                    c.Secure = true;
+                    cookie.Secure = true;
                 }
             }
         }
