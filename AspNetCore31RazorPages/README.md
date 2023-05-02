@@ -2,7 +2,7 @@
 ## .NET Core 3.0 Razor Pages Sample
 ### Summary
 
-ASP.NET Core 3.0 has built-in support for the [SameSite](https://www.owasp.org/index.php/SameSite) attribute, including a 
+ASP.NET Core 3.0 has built-in support for the [SameSite](https://owasp.org/www-community/SameSite) attribute, including a 
 `SameSiteMode` attribute value of `Unspecified` to suppress writing the attribute.
 
 ## <a name="sampleCode"></a>Writing the SameSite attribute
